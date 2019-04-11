@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.MapsActivity" />
+
+    <ImageButton
+        android:id="@+id/centeringButton"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/img_button_border"
+        android:clickable="true"
+        android:onClick="centerMap"
+        android:src="@drawable/ic_gps_fixed_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/layersButton"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_below="@+id/centeringButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/img_button_border"
+        android:clickable="true"
+        android:onClick="setMapLayer"
+        android:src="@drawable/ic_layers_black_24dp" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_arrow_back_black_24dp"
+                android:text="@string/go_to_main"
+                android:textColor="@color/nav_button_text_color"
+                app:layout_constraintStart_toStartOf="parent"
+                android:onClick="goToMain"/>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.design.widget.BottomNavigationView>
+
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/app_settings_details"
+        android:title="@string/app_settings_details"/>
+    <item android:id="@+id/time_format"
+        android:title="@string/log_time_format"/>
+    <item android:id="@+id/set_integerize"
+        android:title="@string/setIntegerize"
+        android:checkable="true"
+        android:checked="true"/>
+
+
+</menu>

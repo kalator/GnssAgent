@@ -1,0 +1,297 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/main_content"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:context=".ui.main.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabSelectedTextColor="@color/colorGrey"
+                    app:tabTextColor="@color/colorWhite">
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sat_status_tab" />
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sat_strength_tab" />
+
+                </android.support.design.widget.TabLayout>
+            </android.support.design.widget.AppBarLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/container_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/divide_line2"
+            android:layout_below="@+id/topBar"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            </android.support.v4.view.ViewPager>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/divide_line2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/coder_chooser">
+            <View
+                android:id="@+id/divideLine2"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.046" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/coder_chooser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/divide_line1">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/selectLogger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/selectCoder"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/coderChooser"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Spinner
+                    android:id="@+id/coderChooser"
+                    android:layout_width="168dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="64dp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/divide_line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/buttons">
+            <View
+                android:id="@+id/divideLine1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_bias="0.046" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_above="@id/elapsed_time">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/startButton"
+
+                    android:layout_width="155dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="24dp"
+                    android:enabled="false"
+                    android:onClick="startLogging"
+                    android:text="@string/startLog"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <Button
+                    android:id="@+id/stopButton"
+                    android:layout_width="155dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="24dp"
+                    android:enabled="false"
+                    android:onClick="stopLogging"
+                    android:text="@string/stopLog"
+                    android:textAlignment="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+            </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/elapsed_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/loc_off">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Chronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="center"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/loc_off"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottomBar">
+
+            <TextView
+                android:id="@+id/locationOff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="8dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_alignParentBottom="true">
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/bottomNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@color/colorPrimary">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="16dp"
+                        android:background="@null"
+                        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
+                        android:onClick="goToFiles"
+                        android:text="@string/go_to_files"
+                        android:textColor="@color/nav_button_text_color"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="16dp"
+                        android:background="@null"
+                        android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+                        android:onClick="goToMap"
+                        android:text="@string/go_to_map"
+                        android:textColor="@color/nav_button_text_color"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_begin="203dp" />
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.design.widget.BottomNavigationView>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

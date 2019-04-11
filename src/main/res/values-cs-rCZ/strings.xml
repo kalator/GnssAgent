@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GNSS Agent</string>
+    <string name="title_location_permission">Umožnit aplikaci GNSS Agent získávat údaje o poloze?</string>
+    <string name="startLog">Začít logovat</string>
+    <string name="stopLog">Konec logování</string>
+    <string name="selectCoder">Vyberte logger:</string>
+    <string name="locationOff">Prosím, zapněte lokátor.</string>
+    <string name="satStatus">Status družic</string>
+    <string name="visible">Viditelné</string>
+    <string name="used">Použité</string>
+    <string name="elapsed">Čas od spuštění:</string>
+    <string name="menu_delete">Vymazat</string>
+    <string name="menu_share">Sdílet</string>
+    <string name="menu_open">Otevřít</string>
+    <string name="default_map">Základní mapa</string>
+    <string name="satellite_map">Satelitní mapa</string>
+    <string name="terrain_map">Terénní mapa</string>
+    <string name="hybrid_map">Hybridní mapa</string>
+    <string name="app_settings_details">Jít do nastavení aplikace</string>
+    <string name="log_time_format">Nastavení času</string>
+    <string name="go_to_files">Soubory</string>
+    <string name="go_to_map">Mapa</string>
+    <string name="go_to_main">Domů</string>
+    <string name="gpsTimeCaption">GPS čas:</string>
+    <string name="all_files">Všechno</string>
+    <string name="obs_files">Observace</string>
+    <string name="nav_files">Nav. zprávy</string>
+    <string name="pos_files">Pozice z čipu</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="sat_status_tab">Status</string>
+    <string name="sat_strength_tab">Síla signálu</string>
+    <string name="cndbhz">Carrier to noise density [dB-Hz]</string>
+    <string name="go_to_documents_directory">Jít do složky dokumenty</string>
+
+    <string name="delete_file">Smazat soubor</string>
+    <string name="delete_file_question">Opravdu chcete smazat tento soubor?</string>
+    <string name="yes">Ano</string>
+    <string name="cancel">Zrušit</string>
+    <string name="save">Uložit</string>
+
+    <string name="gps_week_seconds">GPS týden, sekundy v týdnu</string>
+
+    <string name="cannot_log">Nelze uložit data do souboru, končím logování...</string>
+    <string name="cannot_start_log">Nelze vytvořit logovací soubor.</string>
+
+    <string name="log_service">Logovací služba</string>
+    <string name="log_in_progress">Probíhá logování...</string>
+    <string name="log_saved">Logování ukončeno, uloženo...</string>
+    <string name="log_started">Logování započato...</string>
+
+    <string name="send_log">Gnns Agent - logovací soubor</string>
+    <string name="log_removed">Soubor odstraněn.</string>
+
+    <string name="setIntegerize">Zaokrouhlit čas</string>
+
+
+
+
+
+</resources>
