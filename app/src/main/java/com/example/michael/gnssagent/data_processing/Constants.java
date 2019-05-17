@@ -4,7 +4,7 @@ public final class Constants {
 
     // TODO: to be changes on new leap second
     public static final int UTC_TAI_LEAP_SECONDS = 37;
-    public static final int GPS_UTC_LEAP_SECONDS = UTC_TAI_LEAP_SECONDS - 19;
+    public static final int GPS_UTC_LEAP_SECONDS = -UTC_TAI_LEAP_SECONDS + 19;
 
 
 
@@ -27,6 +27,5 @@ public final class Constants {
     public static final int GPS_STANDARD = 0;
     public static final int GPS_WEEK_SECONDS = 1;
 
-    public static final long GPS_UTC_DIFF_MILLIS = 315964800000L;
-
+    public static final long GPS_UTC_DIFF_MILLIS = 315964800000L + GPS_UTC_LEAP_SECONDS*1000;
 }

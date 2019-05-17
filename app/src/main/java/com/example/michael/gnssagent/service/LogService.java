@@ -28,7 +28,7 @@ import com.example.michael.gnssagent.data_processing.BaseCoder;
 import com.example.michael.gnssagent.data_processing.BncCoder;
 import com.example.michael.gnssagent.data_processing.ChipsetPositionCoder;
 import com.example.michael.gnssagent.data_processing.Constants;
-import com.example.michael.gnssagent.data_processing.GnssLoggerCoder;
+import com.example.michael.gnssagent.data_processing.RawCoder;
 import com.example.michael.gnssagent.data_processing.OneEpoch;
 import com.example.michael.gnssagent.data_processing.VisibleUsableSatelites;
 import com.example.michael.gnssagent.ui.main.MainActivity;
@@ -43,6 +43,7 @@ public class LogService extends Service {
     private boolean logRawFlag; // flag to log or not to log (comes from activity)
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private GnssStatus.Callback gnssStatusCallback;
     private BaseCoder obsCoder;
     private ChipsetPositionCoder posCoder;
     private String selectedObsCoder;
@@ -56,6 +57,8 @@ public class LogService extends Service {
     private Timestamp logStartTimestamp;
 
     private Location loc;
+
+    private String satelites = "";
 
     @Override
     public void onCreate() {
@@ -71,8 +74,12 @@ public class LogService extends Service {
             @Override
             public void onLocationChanged(Location location) {
 
+                if (logRawFlag) {
+                    processPosition(location);
+                }
+
                 loc = location;
-                updateLocationInfo(location);
+                updateMapActivity(location);
             }
 
             @Override
@@ -88,6 +95,51 @@ public class LogService extends Service {
             @Override
             public void onProviderDisabled(String provider) {
 
+            }
+        };
+
+        gnssStatusCallback = new GnssStatus.Callback() {
+            @Override
+            public void onSatelliteStatusChanged(GnssStatus status) {
+                String c;
+                satelites = "";
+                for (int i = 0; i < status.getSatelliteCount(); i++) {
+
+                    String s;
+                    if (status.getSvid(i) < 10) {
+                        s = "0"+status.getSvid(i);
+                    } else {
+                        s = ""+status.getSvid(i);
+                    }
+
+                    if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_GPS) {
+                        if (Math.abs(status.getCarrierFrequencyHz(i) - 1.57544998E9) < Constants.EPS_HZ_GPS) {
+                            c = "G"+s+"_L1";
+                        } else {
+                            c = "G"+s+"_L5";
+                        }
+                    } else if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_GLONASS) {
+                        c = "R"+s;
+                    } else if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_GALILEO) {
+                        if (Math.abs(status.getCarrierFrequencyHz(i) - 1.57544998E9) < Constants.EPS_HZ_GPS) {
+                            c = "E"+s+"_E1";
+                        } else {
+                            c = "E"+s+"_E5";
+                        }
+                    } else if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_BEIDOU) {
+                        c = "C"+s;
+                    } else if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_QZSS) {
+                        c = "J"+s;
+                    } else if (status.getConstellationType(i) == GnssStatus.CONSTELLATION_SBAS) {
+                        c = "S"+s;
+                    } else {
+                        c = "U"+s;
+                    }
+
+                        satelites += c + " ";
+                }
+                Log.i("SATS", satelites);
+                super.onSatelliteStatusChanged(status);
             }
         };
 
@@ -108,10 +160,10 @@ public class LogService extends Service {
                 // observations
                 processRawMeas(eventArgs);
 
-                // position from chipset
-                if (logRawFlag) {
-                    processPosition();
-                }
+                // position from chipset - wrong solution
+             //   if (logRawFlag) {
+            //        processPosition(loc);
+             //   }
             }
         };
 
@@ -134,6 +186,7 @@ public class LogService extends Service {
             return START_NOT_STICKY;
         }
         locationManager.registerGnssMeasurementsCallback(myGnssMeas);
+        locationManager.registerGnssStatusCallback(gnssStatusCallback);
 //        locationManager.registerGnssNavigationMessageCallback(myGnssNav);
 
 
@@ -185,7 +238,7 @@ public class LogService extends Service {
                 }
                 // as is
                 else if (selectedObsCoder.equals(getResources().getStringArray(R.array.coders)[1])) {
-                    obsCoder = new GnssLoggerCoder();
+                    obsCoder = new RawCoder();
                 }
 
                 // position coder
@@ -228,6 +281,7 @@ public class LogService extends Service {
     public void onDestroy() {
         OneEpoch.resetClass();
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
         Log.i("Service", "Stopped");
     }
 
@@ -244,7 +298,7 @@ public class LogService extends Service {
     private void processRawMeas(GnssMeasurementsEvent eventArgs) {
         //preprocess data
         OneEpoch oneEpoch = new OneEpoch(eventArgs, timeFormat, integerizeTime); // preprocessing of gnss data
-        sendMessageToActivity(oneEpoch.getSats());
+        sendDataToMainActivity(oneEpoch.getSats());
         if (logRawFlag) {
          //   Toast.makeText(this, eventArgs.getClock().hasLeapSecond()+"",Toast.LENGTH_LONG).show();
 
@@ -268,14 +322,14 @@ public class LogService extends Service {
                 }
 
             }
-
+/*
             // position from chipset
-            if (!posCoder.parseData(loc, timeFormat)) {
+            if (!posCoder.parseData(loc, timeFormat, satelites)) {
                 pushMsg(getString(R.string.cannot_log));
                 logRawFlag = false;
                 obsCoder.closeFile();
                 posCoder.closeFile();
-            }
+            }*/
 
 
         }
@@ -287,7 +341,7 @@ public class LogService extends Service {
     }
 
     /** Update main activity with sat stats. */
-    private void sendMessageToActivity(VisibleUsableSatelites sats) {
+    private void sendDataToMainActivity(VisibleUsableSatelites sats) {
         Intent intent = new Intent();
         intent.putExtra("Satellite status", sats);
         intent.setAction("UPDATE");
@@ -295,7 +349,7 @@ public class LogService extends Service {
     }
 
     /** Update maps activity with location. */
-    private void updateLocationInfo(Location location) {
+    private void updateMapActivity(Location location) {
         Intent intent = new Intent();
         intent.putExtra("location", location);
         intent.setAction("LOCATION");
@@ -303,9 +357,7 @@ public class LogService extends Service {
     }
 
     /** Save position from chipset to file.*/
-    public void processPosition() {
-
-
-
+    public void processPosition(Location location) {
+        posCoder.parseData(location, timeFormat, satelites);
     }
 }

@@ -4,6 +4,8 @@ import android.location.GnssMeasurementsEvent;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.michael.gnssagent.data_processing.OneEpoch;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

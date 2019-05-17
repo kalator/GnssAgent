@@ -75,6 +75,8 @@ public class OneObs {
                 break;
             case GnssStatus.CONSTELLATION_BEIDOU:
                 this.svid = "C"; // Beidou
+                this.codeL1String = "C1C";
+                this.phaseL1String = "L1C";
                 break;
             case GnssStatus.CONSTELLATION_GALILEO:
                 this.svid = "E"; // Gallileo

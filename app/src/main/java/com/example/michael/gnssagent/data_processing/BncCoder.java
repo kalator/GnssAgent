@@ -2,6 +2,10 @@ package com.example.michael.gnssagent.data_processing;
 
 import android.location.GnssMeasurementsEvent;
 
+import com.example.michael.gnssagent.data_processing.OneEpoch;
+import com.example.michael.gnssagent.data_processing.OneObs;
+import com.example.michael.gnssagent.data_processing.BaseCoder;
+
 import java.util.List;
 
 public class BncCoder extends BaseCoder {
@@ -14,7 +18,7 @@ public class BncCoder extends BaseCoder {
             for (OneObs obs : allObs) {
                 addItemToFile(obs.toString());
             }
-            addItemToFile("");
+            addItemToFile(""); //empty line
         }
         return true;
     }

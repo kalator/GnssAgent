@@ -2,7 +2,10 @@ package com.example.michael.gnssagent.data_processing;
 
 import android.location.GnssMeasurementsEvent;
 
-public class GnssLoggerCoder extends BaseCoder {
+import com.example.michael.gnssagent.data_processing.OneEpoch;
+import com.example.michael.gnssagent.data_processing.BaseCoder;
+
+public class RawCoder extends BaseCoder {
 
     @Override
     public boolean parseData(GnssMeasurementsEvent eventArgs) {

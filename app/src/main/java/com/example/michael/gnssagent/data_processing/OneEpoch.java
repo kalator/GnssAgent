@@ -15,8 +15,6 @@ import static com.example.michael.gnssagent.data_processing.Constants.GALILEO_L5
 import static com.example.michael.gnssagent.data_processing.Constants.GLONASS_L1_FREQUENCY_HZ_AVG;
 import static com.example.michael.gnssagent.data_processing.Constants.GPS_L1_FREQUENCY_HZ;
 import static com.example.michael.gnssagent.data_processing.Constants.GPS_L5_FREQUENCY_HZ;
-import static com.example.michael.gnssagent.data_processing.Constants.GPS_UTC_LEAP_SECONDS;
-import static com.example.michael.gnssagent.data_processing.Constants.NUMBER_MILLI_SECONDS_DAY;
 import static com.example.michael.gnssagent.data_processing.Constants.NUMBER_NANO_SECONDS_100_MILLI;
 import static com.example.michael.gnssagent.data_processing.Constants.NUMBER_NANO_SECONDS_DAY;
 import static com.example.michael.gnssagent.data_processing.Constants.NUMBER_NANO_SECONDS_WEEK;
@@ -50,7 +48,7 @@ public class OneEpoch {
 
         oneEpochObs = new ArrayList<>();
 
-        basicProcessing();
+        determineConst();
     }
 
     // setters, getters
@@ -75,7 +73,7 @@ public class OneEpoch {
 
     }
 
-    protected void basicProcessing() {
+    protected void determineConst() {
 
         double biasNanos = clock.getBiasNanos();
         long  timeNanos = clock.getTimeNanos();
@@ -180,20 +178,46 @@ public class OneEpoch {
     private void processGlonass(GnssMeasurement meas, long tTx, double tRxGNSS) {
         sats.glonassVisible++;
 
+        // check if sat number is decoded, if not, skip
+        if (meas.getSvid() >= 93 && meas.getSvid() <= 106) {
+            return;
+        }
+
         boolean codeLock = (meas.getState() & GnssMeasurement.STATE_CODE_LOCK) > 0;
         boolean todDecoded = (meas.getState() & GnssMeasurement.STATE_GLO_TOD_DECODED) > 0;
+        boolean todKnown = (meas.getState() & GnssMeasurement.STATE_GLO_TOD_KNOWN) > 0;
 
-        if (codeLock && todDecoded) {
+
+        if (codeLock /*&& todDecoded*/ && todKnown) {
 
             setFullBiasNanos();
 
             double dayNumberNanos = Math.floor(-fullBiasNanos/NUMBER_NANO_SECONDS_DAY)*NUMBER_NANO_SECONDS_DAY; //ns
 
-            double tRx = tRxGNSS-dayNumberNanos + 3*3600*1e9 - GPS_UTC_LEAP_SECONDS*1e9;
+            double tRx = tRxGNSS-dayNumberNanos + 3*3600*1e9 - (UTC_TAI_LEAP_SECONDS-19)*1e9;
 
             double pseudoRange = (tRx - tTx) * SPEED_OF_LIGHT / 1.0e9; // m
 
             processBase(pseudoRange, meas, tRxGNSS, "GLONASS");
+
+        }
+    }
+
+    private void processBeidou(GnssMeasurement meas, long tTx, double tRxGNSS) {
+        sats.beidouVisible++;
+
+        boolean codeLock = (meas.getState() & GnssMeasurement.STATE_CODE_LOCK) > 0;
+        boolean towDecoded = (meas.getState() & GnssMeasurement.STATE_TOW_DECODED) > 0;
+//        boolean towUncertainty = meas.getReceivedSvTimeUncertaintyNanos() < 50;
+
+        if (codeLock && towDecoded) {
+
+            setFullBiasNanos();
+            double weekNumberNanos = Math.floor(-1.*fullBiasNanos/NUMBER_NANO_SECONDS_WEEK)
+                    * NUMBER_NANO_SECONDS_WEEK; // ns
+            double pseudoRange = (tRxGNSS - weekNumberNanos - 14000000000L - tTx) * SPEED_OF_LIGHT / 1.0e9; // m
+
+            processBase(pseudoRange, meas, tRxGNSS, "BDS");
 
         }
     }
@@ -268,6 +292,8 @@ public class OneEpoch {
                 sats.galileoUsable++;
             } else if (gnssSys.equals("GLONASS")) {
                 sats.glonassUsable++;
+            } else if (gnssSys.equals("BDS")) {
+                sats.beidouUsable++;
             }
 
 
@@ -303,6 +329,8 @@ public class OneEpoch {
                 fq = "NonDual";
 
             } else if (gnssSys.equals("GLONASS")) {
+                fq = "L1";
+            } else if (gnssSys.equals("BDS")) {
                 fq = "L1";
             }
             setOneObsParams(oneObs, meas, tRxGNSS, pseudoRange, fq, gnssSys);
@@ -356,10 +384,6 @@ public class OneEpoch {
         obs.setDoppler(-meas.getPseudorangeRateMetersPerSecond() / wavelength, fq);
         obs.setFqBands(fq); // must be after setPseudorange for OneObs.toString() method
 
-    }
-
-    private void processBeidou(GnssMeasurement meas, long tTx, double tRxGNSS) {
-        sats.beidouVisible++;
     }
 
     private void processSbas(GnssMeasurement meas, long tTx, double tRxGNSS) {

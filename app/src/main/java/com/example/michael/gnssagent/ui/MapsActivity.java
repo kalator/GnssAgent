@@ -5,12 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.net.Uri;
-import android.provider.Settings;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -102,10 +98,10 @@ public class MapsActivity extends BaseActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        setUpBroadcastReceivers();
+        setUpBroadcastReceiver();
     }
 
-    public void setUpBroadcastReceivers(){
+    public void setUpBroadcastReceiver(){
         // set up broadcast receiver receiving updates from LogService
         receiveUpdateFromLogService = new BroadcastReceiver() {
             @Override
@@ -169,7 +165,11 @@ public class MapsActivity extends BaseActivity implements
 
         currentLocation = loc;
         // put marker on position
-        currentMarker.setPosition(currentLocation);
+        try {
+            currentMarker.setPosition(currentLocation);
+        } catch (NullPointerException e) {
+            // do nothing
+        }
 
         // move camera if map is centered
         if (!userMapMoveFlag) {
